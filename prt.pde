@@ -37,11 +37,14 @@ PVector trace(Ray ray, int n) {
 
 color render(int x, int y) {
 	Ray ray = camera.ray(x, y, random(1), random(1));
-	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,5)), spp+1);
+	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,5)), spp);
 	return color(v.x, v.y, v.z);
 }
 
 void draw() {
+	spp++;
+	println(spp);
+
 	loadPixels();
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
@@ -49,7 +52,4 @@ void draw() {
 		}
 	}
 	updatePixels();
-
-	println(spp);
-	spp++;
 }
