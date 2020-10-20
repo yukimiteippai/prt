@@ -22,7 +22,7 @@ class sphere {
 		} else return -1;
 	}
 
-	void intersect(hit H, ray ray) {
+	void intersect(Hit H, ray ray) {
 		float t = this.dist(ray);
 
 		if (0<t && t<H.dist) {

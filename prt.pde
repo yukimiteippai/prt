@@ -25,7 +25,7 @@ void setup() {
 }
 
 PVector trace(ray ray, int n) {
-	hit H = new hit();
+	Hit H = new Hit();
 
 	if (0<n) {
 		for (int i=0; i<spheres.length; i++)
