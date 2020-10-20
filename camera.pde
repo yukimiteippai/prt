@@ -15,10 +15,6 @@ class camera{
     float xx = (float)((x-w2)/w2);
     float zz = (float)((y-h2)/h2);
     PVector dir = new PVector(xx, flen, -zz).normalize();
-    
-    V p = new V(pos.x, pos.y, pos.z);
-    V d = new V(dir.x, dir.y, dir.z);
-
-    return new ray(p, d);
+    return new ray(this.pos, dir);
   }
 }

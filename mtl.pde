@@ -19,12 +19,12 @@ class MTL_Diffuse implements mtl {
 		int sg = (H.normal.z<0) ?-1 :1;
 		float a = -1/(sg+H.normal.z);
 		float b = H.normal.x * H.normal.y * a;
-		V T = new V(
+		PVector T = new PVector(
 		    1 + sg*H.normal.x*H.normal.x*a,
 		    sg*b,
 		    -sg*H.normal.x
 		);
-		V B = new V(
+		PVector B = new PVector(
 		    b,
 		    sg + H.normal.y*H.normal.y*a,
 		    -H.normal.y
@@ -32,13 +32,16 @@ class MTL_Diffuse implements mtl {
 		float u1 = random(1);
 		float u2 = random(TWO_PI);
 		float rad = sqrt(u1);
-
 		V hp = new V(H.pos.x, H.pos.y, H.pos.z);
 		V hn = new V(H.normal.x, H.normal.y, H.normal.z);
-
+		PVector u = PVector.mult(T, rad*cos(u2));
+		PVector v = PVector.mult(B, rad*sin(u2));
+		PVector w = PVector.mult(H.normal, sqrt(1-u1));
+		// PVector d = PVector.add(PVector.mult(H.normal, sqrt(1-u1)), PVector.add(PVector.mult(), PVector.mult()));
 		ray ray = new ray(
-		    hp.add(hn.mul(0.00001)),
-		    hn.mul(sqrt(1-u1)).add(T.mul(rad*cos(u2)).add(B.mul(rad*sin(u2))))
+			PVector.add(H.pos, PVector.mult(H.normal, 0.00001)),
+			u.add(v).add(w)
+			// hn.mul(sqrt(1-u1)).add(T.mul(rad*cos(u2)).add(B.mul(rad*sin(u2))))
 		);
 		return trace(ray, n);
 	}
