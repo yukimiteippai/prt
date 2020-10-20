@@ -1,8 +1,8 @@
-class camera {
+class Camera {
 	PVector pos;
 	float flen;
 
-	camera(PVector p, float f) {
+	Camera(PVector p, float f) {
 		pos = p;
 		flen = f;
 	}

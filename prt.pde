@@ -1,4 +1,4 @@
-camera camera;
+Camera camera;
 Sphere[] spheres;
 int spp = 0;
 PVector[] accumlated_radiance;
@@ -12,7 +12,7 @@ void setup() {
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
 
-	camera = new camera(new PVector(0,-10,2), 1.5);
+	camera = new Camera(new PVector(0,-10,2), 1.5);
 	spheres = new Sphere[] {
 	    new Sphere(new PVector(-1,0,0), 2, new MTL_Diffuse()),
 	    new Sphere(new PVector(1,0,0), 2, new MTL_Diffuse()),
