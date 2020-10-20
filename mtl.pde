@@ -32,9 +32,13 @@ class MTL_Diffuse implements mtl {
 		float u1 = random(1);
 		float u2 = random(TWO_PI);
 		float rad = sqrt(u1);
+
+		V hp = new V(H.pos.x, H.pos.y, H.pos.z);
+		V hn = new V(H.normal.x, H.normal.y, H.normal.z);
+
 		ray ray = new ray(
-		    H.pos.add(H.normal.mul(0.00001)),
-		    H.normal.mul(sqrt(1-u1)).add(T.mul(rad*cos(u2)).add(B.mul(rad*sin(u2))))
+		    hp.add(hn.mul(0.00001)),
+		    hn.mul(sqrt(1-u1)).add(T.mul(rad*cos(u2)).add(B.mul(rad*sin(u2))))
 		);
 		return trace(ray, n);
 	}
