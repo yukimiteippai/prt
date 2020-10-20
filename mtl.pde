@@ -1,20 +1,20 @@
-interface mtl {
+interface Material {
 	PVector IL(Hit H, ray r, int n);
 }
 
-class MTL_emit implements mtl {
+class MTL_emit implements Material {
 	PVector IL(Hit H, ray r, int n) {
 		return new PVector(10, 10, 10);
 	}
 }
 
-class MTL_BG implements mtl {
+class MTL_BG implements Material {
 	PVector IL(Hit H, ray r, int n) {
 		return new PVector(0.1, 0.1, 0.1);
 	}
 }
 
-class MTL_Diffuse implements mtl {
+class MTL_Diffuse implements Material {
 	PVector IL(Hit H, ray r, int n) {
 		int sg = (H.normal.z<0) ?-1 :1;
 		float a = -1/(sg+H.normal.z);
@@ -45,7 +45,7 @@ class MTL_Diffuse implements mtl {
 	}
 }
 
-class MTL_Diffuse_red implements mtl {
+class MTL_Diffuse_red implements Material {
 	PVector IL(Hit H, ray r, int n) {
 		MTL_Diffuse D = new MTL_Diffuse();
 		PVector v = D.IL(H,r,n);
@@ -53,7 +53,7 @@ class MTL_Diffuse_red implements mtl {
 	}
 }
 
-class MTL_Diffuse_green implements mtl {
+class MTL_Diffuse_green implements Material {
 	PVector IL(Hit H, ray r, int n) {
 		MTL_Diffuse D = new MTL_Diffuse();
 		PVector v = D.IL(H,r,n);

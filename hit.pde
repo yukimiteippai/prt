@@ -2,7 +2,7 @@ class Hit{
   float dist;
   PVector pos;
   PVector normal;
-  mtl M;
+  Material M;
   
   Hit(){
     dist = 100000000;
