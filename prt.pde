@@ -2,6 +2,7 @@ Camera camera;
 Sphere[] spheres;
 int spp = 0;
 PVector[] accumlated_radiance;
+Material environment;
 
 void setup() {
 	colorMode(RGB, 1.0);
@@ -12,6 +13,7 @@ void setup() {
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
 
+	environment = new MTL_BG();
 	camera = new Camera(new PVector(0,-10,2), 1.5);
 	spheres = new Sphere[] {
 	    new Sphere(new PVector(-1,0,0), 2, new MTL_Diffuse()),
@@ -25,8 +27,8 @@ void setup() {
 }
 
 Hit findNearestIntersection(Ray ray, float tmin, float tmax){
-	Hit hit = new Hit();
-	hit.mtl = new MTL_BG();
+	Hit hit = null;
+	// hit.mtl = new MTL_BG();
 	
 	for (int i=0; i<spheres.length; i++){
 		Hit hit_temp = spheres[i].intersect(ray, tmin, tmax);
@@ -36,14 +38,20 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax){
 		}
 	}
 
+	if(hit != null && PVector.dot(ray.d, hit.normal)>0){
+		hit.normal.mult(-1);
+	}
+
 	return hit;
 }
 
 PVector trace(Ray ray, int n) {
-	if (0<n) {
-		Hit hit = findNearestIntersection(ray, 0.0001, 100000);
-		return hit.mtl.IL(hit,ray,n-1);
-	} else return new PVector(0, 0, 0);
+	if (0==n) return new PVector(0, 0, 0);
+
+	Hit hit = findNearestIntersection(ray, 0.0001, 100000);
+	if(hit == null)	return environment.IL(hit, ray, 0);
+
+	return hit.mtl.IL(hit,ray,n-1);
 }
 
 color render(int x, int y) {
