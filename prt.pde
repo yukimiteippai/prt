@@ -36,7 +36,7 @@ PVector trace(ray ray, int n) {
 }
 
 color render(int x, int y) {
-	ray ray = camera.cameraray(x,y);
+	ray ray = camera.ray(x, y, random(1), random(1));
 	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,5)), spp+1);
 	return color(v.x, v.y, v.z);
 }
