@@ -26,7 +26,7 @@ void setup() {
 
 Hit findNearestIntersection(Ray ray, float tmin, float tmax){
 	Hit hit = new Hit();
-	hit.M = new MTL_BG();
+	hit.mtl = new MTL_BG();
 	
 	for (int i=0; i<spheres.length; i++){
 		Hit hit_temp = spheres[i].intersect(ray, tmin, tmax);
@@ -41,8 +41,8 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax){
 
 PVector trace(Ray ray, int n) {
 	if (0<n) {
-		Hit H = findNearestIntersection(ray, 0.0001, 100000);
-		return H.M.IL(H,ray,n-1);
+		Hit hit = findNearestIntersection(ray, 0.0001, 100000);
+		return hit.mtl.IL(hit,ray,n-1);
 	} else return new PVector(0, 0, 0);
 }
 

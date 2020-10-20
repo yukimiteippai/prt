@@ -2,5 +2,5 @@ class Hit {
 	float dist;
 	PVector pos;
 	PVector normal;
-	Material M;
+	Material mtl;
 }

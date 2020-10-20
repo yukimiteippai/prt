@@ -1,9 +1,9 @@
 class Sphere {
 	PVector pos;
 	float r;
-	Material M;
+	Material mtl;
 
-	Sphere(PVector p, float rr, Material mm) {pos = p; r = rr; M=mm;}
+	Sphere(PVector p, float rr, Material mm) {pos = p; r = rr; mtl=mm;}
 
 	float dist(Ray ray) {
 		PVector thispos = new PVector(this.pos.x, this.pos.y, this.pos.z);
@@ -30,7 +30,7 @@ class Sphere {
 			hit.dist = t;
 			hit.pos = PVector.add(ray.o, PVector.mult(ray.d, t));
 			hit.normal = PVector.sub(hit.pos, this.pos).normalize();
-			hit.M = this.M;
+			hit.mtl = this.mtl;
 			return hit;
 		}
 		else return null;
