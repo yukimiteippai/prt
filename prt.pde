@@ -12,7 +12,7 @@ void setup() {
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
 
-	camera = new camera(new V(0,-10,2), 1.5);
+	camera = new camera(new PVector(0,-10,2), 1.5);
 	spheres = new sphere[] {
 	    new sphere(new V(-1,0,0), 2, new MTL_Diffuse()),
 	    new sphere(new V(1,0,0), 2, new MTL_Diffuse()),
