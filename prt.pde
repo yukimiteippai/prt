@@ -32,17 +32,19 @@ V trace(ray ray, int n) {
 	} else return new V(0);
 }
 
-void render(int x, int y) {
+color render(int x, int y) {
 	ray ray = camera.cameraray(x,y);
 	float inv = 1.0/spp;
 	c[y*width+x] = c[y*width+x].add(trace(ray,5));
-	set(x,y, c[y*width+x].mul(inv).col());
+	// set(x,y, c[y*width+x].mul(inv).col());
+	return c[y*width+x].mul(inv).col();
 }
 
 void draw() {
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
-			render(x,y);
+			color c = render(x,y);
+			set(x, y, c);
 		}
 	}
 
