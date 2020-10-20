@@ -1,5 +1,5 @@
 camera camera;
-sphere[] spheres;
+Sphere[] Spheres;
 int spp = 0;
 PVector[] accumlated_radiance;
 
@@ -13,14 +13,14 @@ void setup() {
 	}
 
 	camera = new camera(new PVector(0,-10,2), 1.5);
-	spheres = new sphere[] {
-	    new sphere(new PVector(-1,0,0), 2, new MTL_Diffuse()),
-	    new sphere(new PVector(1,0,0), 2, new MTL_Diffuse()),
-	    new sphere(new PVector(0,-2,10), 3, new MTL_emit()),
-	    new sphere(new PVector(105,0,0), 100, new MTL_Diffuse_green()),
-	    new sphere(new PVector(-105,0,0), 100, new MTL_Diffuse_red()),
-	    new sphere(new PVector(0,0,-102), 100, new MTL_Diffuse()),
-	    new sphere(new PVector(0,110,0), 100, new MTL_Diffuse()),
+	Spheres = new Sphere[] {
+	    new Sphere(new PVector(-1,0,0), 2, new MTL_Diffuse()),
+	    new Sphere(new PVector(1,0,0), 2, new MTL_Diffuse()),
+	    new Sphere(new PVector(0,-2,10), 3, new MTL_emit()),
+	    new Sphere(new PVector(105,0,0), 100, new MTL_Diffuse_green()),
+	    new Sphere(new PVector(-105,0,0), 100, new MTL_Diffuse_red()),
+	    new Sphere(new PVector(0,0,-102), 100, new MTL_Diffuse()),
+	    new Sphere(new PVector(0,110,0), 100, new MTL_Diffuse()),
 	};
 }
 
@@ -28,8 +28,8 @@ PVector trace(Ray ray, int n) {
 	Hit H = new Hit();
 
 	if (0<n) {
-		for (int i=0; i<spheres.length; i++)
-			spheres[i].intersect(H, ray);
+		for (int i=0; i<Spheres.length; i++)
+			Spheres[i].intersect(H, ray);
 
 		return H.M.IL(H,ray,n-1);
 	} else return new PVector(0, 0, 0);

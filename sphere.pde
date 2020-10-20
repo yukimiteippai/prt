@@ -1,9 +1,9 @@
-class sphere {
+class Sphere {
 	PVector pos;
 	float r;
 	Material M;
 
-	sphere(PVector p, float rr, Material mm) {pos = p; r = rr; M=mm;}
+	Sphere(PVector p, float rr, Material mm) {pos = p; r = rr; M=mm;}
 
 	float dist(Ray ray) {
 		PVector thispos = new PVector(this.pos.x, this.pos.y, this.pos.z);
