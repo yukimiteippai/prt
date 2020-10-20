@@ -1,14 +1,16 @@
 camera camera;
 sphere[] spheres;
 int spp = 0;
-V[] c;
+PVector[] accumlated_radiance;
 
 void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
-	c = new V[width*height];
-
-	for (int i=0; i<width*height; i++)c[i] = new V(0);
+	
+	accumlated_radiance = new PVector[width*height];
+	for (int i=0; i<width*height; i++){
+		accumlated_radiance[i] = new PVector(0, 0, 0);
+	}
 
 	camera = new camera(new V(0,-10,2), 1.5);
 	spheres = new sphere[] {
@@ -22,31 +24,32 @@ void setup() {
 	};
 }
 
-V trace(ray ray, int n) {
+PVector trace(ray ray, int n) {
 	hit H = new hit();
 
 	if (0<n) {
-		for (int i=0; i<spheres.length; i++)spheres[i].intersect(H, ray);
+		for (int i=0; i<spheres.length; i++)
+			spheres[i].intersect(H, ray);
 
 		return H.M.IL(H,ray,n-1);
-	} else return new V(0);
+	} else return new PVector(0, 0, 0);
 }
 
 color render(int x, int y) {
 	ray ray = camera.cameraray(x,y);
-	float inv = 1.0/spp;
-	c[y*width+x] = c[y*width+x].add(trace(ray,5));
-	// set(x,y, c[y*width+x].mul(inv).col());
-	return c[y*width+x].mul(inv).col();
+	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,5)), spp+1);
+	return color(v.x, v.y, v.z);
 }
 
 void draw() {
+	loadPixels();
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
-			color c = render(x,y);
-			set(x, y, c);
+			pixels[y*width + x] = render(x, y);
 		}
 	}
+	updatePixels();
 
+	println(spp);
 	spp++;
 }

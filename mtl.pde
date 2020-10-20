@@ -1,19 +1,21 @@
 interface mtl {
-	V IL(hit H, ray r, int n);
+	PVector IL(hit H, ray r, int n);
 }
 
 class MTL_emit implements mtl {
-	V IL(hit H, ray r, int n) {
-		return new V(10);
+	PVector IL(hit H, ray r, int n) {
+		return new PVector(10, 10, 10);
 	}
 }
 
 class MTL_BG implements mtl {
-	V IL(hit H, ray r, int n) {return new V(0.1);}
+	PVector IL(hit H, ray r, int n) {
+		return new PVector(0.1, 0.1, 0.1);
+	}
 }
 
 class MTL_Diffuse implements mtl {
-	V IL(hit H, ray r, int n) {
+	PVector IL(hit H, ray r, int n) {
 		int sg = (H.normal.z<0) ?-1 :1;
 		float a = -1/(sg+H.normal.z);
 		float b = H.normal.x * H.normal.y * a;
@@ -39,15 +41,17 @@ class MTL_Diffuse implements mtl {
 }
 
 class MTL_Diffuse_red implements mtl {
-	V IL(hit H, ray r, int n) {
+	PVector IL(hit H, ray r, int n) {
 		MTL_Diffuse D = new MTL_Diffuse();
-		return D.IL(H,r,n).mul(new V(0.95,0.05,0.05));
+		PVector v = D.IL(H,r,n);
+		return new PVector(v.x*0.9, v.y*0.1, v.z*0.1);
 	}
 }
 
 class MTL_Diffuse_green implements mtl {
-	V IL(hit H, ray r, int n) {
+	PVector IL(hit H, ray r, int n) {
 		MTL_Diffuse D = new MTL_Diffuse();
-		return D.IL(H,r,n).mul(new V(0.05,0.95,0.05));
+		PVector v = D.IL(H,r,n);
+		return new PVector(v.x*0.1, v.y*0.9, v.z*0.1);
 	}
 }
