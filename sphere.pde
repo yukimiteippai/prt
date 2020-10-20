@@ -5,7 +5,7 @@ class sphere {
 
 	sphere(PVector p, float rr, Material mm) {pos = p; r = rr; M=mm;}
 
-	float dist(ray ray) {
+	float dist(Ray ray) {
 		PVector thispos = new PVector(this.pos.x, this.pos.y, this.pos.z);
 		PVector po = PVector.sub(ray.o, thispos);
 		float b = PVector.dot(ray.d, po);
@@ -22,7 +22,7 @@ class sphere {
 		} else return -1;
 	}
 
-	void intersect(Hit H, ray ray) {
+	void intersect(Hit H, Ray ray) {
 		float t = this.dist(ray);
 
 		if (0<t && t<H.dist) {

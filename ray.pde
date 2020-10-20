@@ -1,4 +1,4 @@
-class ray {
+class Ray {
 	PVector o; PVector d;
-	ray(PVector oo, PVector dd) {o=oo; d=dd;}
+	Ray(PVector oo, PVector dd) {o=oo; d=dd;}
 }
