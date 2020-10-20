@@ -22,14 +22,17 @@ class Sphere {
 		} else return -1;
 	}
 
-	void intersect(Hit H, Ray ray) {
+	Hit intersect(Ray ray, float tmin, float tmax) {
 		float t = this.dist(ray);
 
-		if (0<t && t<H.dist) {
-			H.dist = t;
-			H.pos = PVector.add(ray.o, PVector.mult(ray.d, t));
-			H.normal = PVector.sub(H.pos, this.pos).normalize();
-			H.M = this.M;
+		if (tmin<t && t<tmax) {
+			Hit hit = new Hit();
+			hit.dist = t;
+			hit.pos = PVector.add(ray.o, PVector.mult(ray.d, t));
+			hit.normal = PVector.sub(hit.pos, this.pos).normalize();
+			hit.M = this.M;
+			return hit;
 		}
+		else return null;
 	}
 }
