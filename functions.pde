@@ -23,3 +23,6 @@ PVector sampleHemisphere_cosine(float u1, float u2){
 	u2 = u2*TWO_PI;
 	return new PVector(rad*cos(u2), rad*sin(u2), sqrt(1-u1));
 }
+
+color toColor(PVector v){return color(v.x, v.y, v.z);}
+PVector multC(PVector v1, PVector v2){return new PVector(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);}
