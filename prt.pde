@@ -19,7 +19,7 @@ void setup() {
 
 void createScene(){
 	// set the camera
-	camera = new Camera(new PVector(0,-10,2), 1.5);
+	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 1.5);
 
 	// set the background emission
 	environment = new Material();
@@ -134,7 +134,7 @@ PVector trace(Ray ray, int n) {
 
 color render(int x, int y) {
 	Ray ray = camera.ray(x, y, random(1), random(1));
-	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,2)), spp);
+	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,10)), spp);
 	return toColor(v);
 }
 
