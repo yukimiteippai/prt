@@ -1,3 +1,4 @@
+// pass tangent(T) and bitangent(B) vector along the normal(n)
 void tangentspace_basis(PVector n, PVector T, PVector B){
 	int sg = (n.z<0) ?-1 :1;
 	float a = -1/(sg+n.z);
@@ -6,6 +7,7 @@ void tangentspace_basis(PVector n, PVector T, PVector B){
 	B.set(b, sg + n.y*n.y*a, -n.y);
 }
 
+// return tangent space along the normal(n)
 PMatrix3D tangentspace_mat(PVector n){
 	int sg = (n.z<0) ?-1 :1;
 	float a = -1/(sg+n.z);
@@ -18,6 +20,7 @@ PMatrix3D tangentspace_mat(PVector n){
 	);
 }
 
+// convert uniform 2d distribution into cosine distributed direction over a hemisphere.
 PVector sampleHemisphere_cosine(float u1, float u2){
 	float rad = sqrt(u1);
 	u2 = u2*TWO_PI;

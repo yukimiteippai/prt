@@ -1,15 +1,17 @@
+int spp = 0; // sample size per pixel.
+PVector[] accumlated_radiance; // image to store the sum of sampled contribution.
+
+// scene info
 Camera camera;
-Sphere[] spheres;
-int spp = 0;
-PVector[] accumlated_radiance;
 Material environment;
+Sphere[] spheres;
 
 void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
+
 	// initialize image
 	accumlated_radiance = new PVector[width*height];
-
 	for (int i=0; i<width*height; i++) {
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
@@ -17,6 +19,7 @@ void setup() {
 	createScene();
 }
 
+// initialize camera, environment, and spheres.
 void createScene() {
 	// set the camera
 	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 1.5);
@@ -43,18 +46,25 @@ void createScene() {
 	};
 }
 
+// return the nearest intersection of ray and spheres within a range of distance[tmin, tmax]
+// With no intersection, return null.
 Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	Hit hit = null;
 
+	// test all objects and keep nearest one in 'hit'.
 	for (int i=0; i<spheres.length; i++) {
+
+		// receive intersection info within the range.
 		Hit hit_temp = spheres[i].intersect(ray, tmin, tmax);
 
+		// if a new hit point found, update 'hit' and shrink the range.
 		if (hit_temp != null) {
 			hit = hit_temp;
 			tmax = hit.dist;
 		}
 	}
 
+	// flip normal when it is backfacin
 	if (hit != null && PVector.dot(ray.d, hit.normal)>0) {
 		hit.normal.mult(-1);
 	}
@@ -62,18 +72,27 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	return hit;
 }
 
+// trace the ray and return the radiance incoming from its direction.
 PVector trace(Ray ray, int n) {
-	if (0==n) return new PVector(0, 0, 0);
+	// terminate recursion at some depth
+	if (10<n) return new PVector(0, 0, 0);
 
+	// receive nearest intersection info
 	Hit hit = findNearestIntersection(ray, 0.0001, 100000);
 
-	if (hit == null)	return environment.emission;
+	// if the ray has no intersection, retutn environment emission.
+	if (hit == null) return environment.emission;
 
+	
+	// prepare to accumulate radiance in "result"
 	PVector result = new PVector(0,0,0);
 
+	// if the surface has emission, add it.
 	if (hit.mtl.emission != null)
 		result.add(hit.mtl.emission);
 
+
+	// if the surface has reflection, add it by tracing next ray.
 	if (hit.mtl.reflection != null) {
 		// choose next ray in tangent space using matrix
 		//
@@ -83,21 +102,25 @@ PVector trace(Ray ray, int n) {
 		// PVector dirInT = WtoT.mult(ray.d, null);
 		// PVector dirOutT = new PVector();
 		// switch (hit.mtl.type) {
-		// 	case DIFFUSE:
+		// case DIFFUSE:
 		// 		dirOutT = sampleHemisphere_cosine(random(1), random(1));
 		// 		break;
-		// 	case SPECULAR:
+		// case SPECULAR:
 		// 		dirOutT.set(dirInT.x, dirInT.y, -dirInT.z);
 		// 		break;
 		// }
 		// ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
 		// TtoW.mult(dirOutT, ray.d);
+		
+
 		// choose next ray directly in world space
 		//
+		// prepare basis of tangent space
 		PVector T = new PVector();
 		PVector B = new PVector();
 		tangentspace_basis(hit.normal, T, B);
 
+		// sample the reflecting direction depending on the reflectin type.
 		switch (hit.mtl.type) {
 		case DIFFUSE:
 			ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
@@ -111,34 +134,37 @@ PVector trace(Ray ray, int n) {
 			break;
 		}
 
-		return multC(hit.mtl.reflection, trace(ray, n-1));
+		// add reflection to the result
+		// reflection is surface color times incidence that we trace next.
+		result.add( multC(hit.mtl.reflection, trace(ray, n+1)) );
 	}
 
 	return result;
 }
 
+// calculate color on (x, y)
 color render(int x, int y) {
-	Ray ray = camera.ray(x, y, random(1), random(1));
-	PVector v = PVector.div(accumlated_radiance[y*width+x].add(trace(ray,10)), spp);
-	return toColor(v);
+	Ray ray = camera.ray(x, y, random(1), random(1)); // sample camera ray
+	accumlated_radiance[y*width+x].add(trace(ray,0)); // update the sum of sampled path contribusion
+	PVector average = PVector.div(accumlated_radiance[y*width+x], spp); // average the radiance
+	return toColor(average);
 }
 
 void draw() {
+	// update sample size count
 	spp++;
-	println(spp);
-
-	if (spp>50) {
+	// println(spp);
+	if (spp>500) {
 		println("stop rendering");
 		noLoop();
 	}
 
+	// update pixels
 	loadPixels();
-
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
 			pixels[y*width + x] = render(x, y);
 		}
 	}
-
 	updatePixels();
 }

@@ -1,4 +1,6 @@
 class Ray {
-	PVector o; PVector d;
-	Ray(PVector oo, PVector dd) {o=oo; d=dd;}
+	PVector o; // ray origin
+	PVector d; // ray direction
+	
+	Ray(PVector _o, PVector _d) {o=_o; d=_d;}
 }
