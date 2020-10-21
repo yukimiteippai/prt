@@ -8,17 +8,24 @@ void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
 	
+	// initialize image
 	accumlated_radiance = new PVector[width*height];
 	for (int i=0; i<width*height; i++){
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
 
+	createScene();
+}
 
+void createScene(){
+	// set the camera
 	camera = new Camera(new PVector(0,-10,2), 1.5);
 
+	// set the background emission
 	environment = new Material();
 	environment.emission = new PVector(0.6, 0.7, 0.8);
 
+	// create some materials for objects
 	Material white = new Material();
 	white.reflection = new PVector(0.6, 0.6, 0.6);
 
@@ -35,6 +42,7 @@ void setup() {
 	Material light = new Material();
 	light.emission = new PVector(10,10,10);
 
+	// create spheres
 	spheres = new Sphere[] {
 	    new Sphere(new PVector(-1,0,0), 2, white),
 	    new Sphere(new PVector(1,0,0), 2, mirror),
