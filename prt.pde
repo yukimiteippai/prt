@@ -7,65 +7,55 @@ Material environment;
 void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
-	
 	// initialize image
 	accumlated_radiance = new PVector[width*height];
-	for (int i=0; i<width*height; i++){
+
+	for (int i=0; i<width*height; i++) {
 		accumlated_radiance[i] = new PVector(0, 0, 0);
 	}
 
 	createScene();
 }
 
-void createScene(){
+void createScene() {
 	// set the camera
 	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 1.5);
-
-	// set the background emission
-	environment = new Material();
-	environment.emission = new PVector(0.6, 0.7, 0.8);
-
+	
+	// set the background emissiomn
+	environment = new Material(new PVector(0.6, 0.7, 0.8), null);
+	
 	// create some materials for objects
-	Material white = new Material();
-	white.reflection = new PVector(0.6, 0.6, 0.6);
-
-	Material red = new Material();
-	red.reflection = new PVector(0.9, 0.1, 0.1);
-
-	Material green = new Material();
-	green.reflection = new PVector(0.1, 0.9, 0.1);
-
-	Material mirror = new Material();
-	mirror.reflection = new PVector(0.9, 0.9, 0.9);
-	mirror.type = MtlType.SPECULAR;
-
-	Material light = new Material();
-	light.emission = new PVector(10,10,10);
-
+	Material white	= new Material(null, new PVector(0.6, 0.6, 0.6), MtlType.DIFFUSE);
+	Material red	= new Material(null, new PVector(0.9, 0.1, 0.1), MtlType.DIFFUSE);
+	Material green	= new Material(null, new PVector(0.1, 0.9, 0.1), MtlType.DIFFUSE);
+	Material mirror	= new Material(null, new PVector(0.9, 0.9, 0.9), MtlType.SPECULAR);
+	Material light	= new Material(new PVector(10,10,10), null);
+	
 	// create spheres
 	spheres = new Sphere[] {
-	    new Sphere(new PVector(-1,0,0), 2, white),
-	    new Sphere(new PVector(1,0,0), 2, mirror),
-	    new Sphere(new PVector(0,-2,10), 3, light),
-	    new Sphere(new PVector(105,0,0), 100, green),
-	    new Sphere(new PVector(-105,0,0), 100, red),
-	    new Sphere(new PVector(0,0,-102), 100, white),
-	    new Sphere(new PVector(0,110,0), 100, white),
+	    new Sphere(new PVector(-1, 0, 0), 2,  white), // ball left
+	    new Sphere(new PVector( 1, 0, 0), 2, mirror), // ball right
+	    new Sphere(new PVector( 0,-2,10), 3,  light), // light
+	    new Sphere(new PVector( 105, 0, 0), 100, green), // wall left
+	    new Sphere(new PVector(-105, 0, 0),	100,   red), // wall right
+	    new Sphere(new PVector( 0, 0,-102),	100, white), // floor
+	    new Sphere(new PVector( 0, 110, 0),	100, white), // wall back
 	};
 }
 
-Hit findNearestIntersection(Ray ray, float tmin, float tmax){
+Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	Hit hit = null;
-	
-	for (int i=0; i<spheres.length; i++){
+
+	for (int i=0; i<spheres.length; i++) {
 		Hit hit_temp = spheres[i].intersect(ray, tmin, tmax);
-		if(hit_temp != null){
+
+		if (hit_temp != null) {
 			hit = hit_temp;
 			tmax = hit.dist;
 		}
 	}
 
-	if(hit != null && PVector.dot(ray.d, hit.normal)>0){
+	if (hit != null && PVector.dot(ray.d, hit.normal)>0) {
 		hit.normal.mult(-1);
 	}
 
@@ -76,14 +66,15 @@ PVector trace(Ray ray, int n) {
 	if (0==n) return new PVector(0, 0, 0);
 
 	Hit hit = findNearestIntersection(ray, 0.0001, 100000);
-	if(hit == null)	return environment.emission;
+
+	if (hit == null)	return environment.emission;
 
 	PVector result = new PVector(0,0,0);
 
-	if(hit.mtl.emission != null)
+	if (hit.mtl.emission != null)
 		result.add(hit.mtl.emission);
 
-	if(hit.mtl.reflection != null){
+	if (hit.mtl.reflection != null) {
 		// choose next ray in tangent space using matrix
 		//
 		// PMatrix3D TtoW = tangentspace_mat(hit.normal);
@@ -91,44 +82,38 @@ PVector trace(Ray ray, int n) {
 		// WtoT.transpose();
 		// PVector dirInT = WtoT.mult(ray.d, null);
 		// PVector dirOutT = new PVector();
-
 		// switch (hit.mtl.type) {
 		// 	case DIFFUSE:
 		// 		dirOutT = sampleHemisphere_cosine(random(1), random(1));
 		// 		break;
-
 		// 	case SPECULAR:
 		// 		dirOutT.set(dirInT.x, dirInT.y, -dirInT.z);
 		// 		break;
 		// }
-
 		// ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
 		// TtoW.mult(dirOutT, ray.d);
-
-
 		// choose next ray directly in world space
-		// 
+		//
 		PVector T = new PVector();
 		PVector B = new PVector();
 		tangentspace_basis(hit.normal, T, B);
 
 		switch (hit.mtl.type) {
-			case DIFFUSE:
-				ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
+		case DIFFUSE:
+			ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
+			PVector dir = sampleHemisphere_cosine(random(1), random(1));
+			ray.d = T.mult(dir.x).add(B.mult(dir.y)).add(hit.normal.mult(dir.z));
+			break;
 
-				PVector dir = sampleHemisphere_cosine(random(1), random(1));
-				ray.d = T.mult(dir.x).add(B.mult(dir.y)).add(hit.normal.mult(dir.z));
-				break;
-			
-			case SPECULAR:
-				ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
-				ray.d = PVector.add(ray.d, PVector.mult(hit.normal, -2*PVector.dot(hit.normal, ray.d)));
-				break;
+		case SPECULAR:
+			ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
+			ray.d = PVector.add(ray.d, PVector.mult(hit.normal, -2*PVector.dot(hit.normal, ray.d)));
+			break;
 		}
 
 		return multC(hit.mtl.reflection, trace(ray, n-1));
 	}
-	
+
 	return result;
 }
 
@@ -141,16 +126,19 @@ color render(int x, int y) {
 void draw() {
 	spp++;
 	println(spp);
-	if(spp>50){
+
+	if (spp>50) {
 		println("stop rendering");
 		noLoop();
 	}
 
 	loadPixels();
+
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
 			pixels[y*width + x] = render(x, y);
 		}
 	}
+
 	updatePixels();
 }
