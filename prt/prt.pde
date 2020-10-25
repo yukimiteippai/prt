@@ -42,18 +42,16 @@ void createScene() {
 Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	Hit hit = null;
 
-	// test all objects and keep nearest one in 'hit'.
-	for (int i=0; i<spheres.length; i++) {
+	// test all spheres to find nearest intersection info here
 
-		// receive intersection info within the range.
-		Hit hit_temp = spheres[i].intersect(ray, tmin, tmax);
 
-		// if a new hit point found, update 'hit' and shrink the range.
-		if (hit_temp != null) {
-			hit = hit_temp;
-			tmax = hit.dist;
-		}
-	}
+
+
+
+
+
+
+
 
 	// flip normal when it is backfacin
 	if (hit != null && PVector.dot(ray.d, hit.normal)>0) {
@@ -65,8 +63,8 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 // calculate color on (x, y)
 color render(int x, int y) {
-	Ray ray = camera.ray(x, y, random(1), random(1)); // sample camera ray
-	Hit hit = findNearestIntersection(ray, 0.0001, 10000);
+	Ray view = camera.ray(x, y, random(1), random(1)); // sample camera ray
+	Hit hit = findNearestIntersection(view, 0.0001, 10000);
 	PVector result = hit.mtl.Color();
 	// PVector result = hit.normal;
 	return toColor(result);
