@@ -94,27 +94,6 @@ PVector trace(Ray ray, int n) {
 
 	// if the surface has reflection, add it by tracing next ray.
 	if (hit.mtl.reflection != null) {
-		// choose next ray in tangent space using matrix
-		//
-		// PMatrix3D TtoW = tangentspace_mat(hit.normal);
-		// PMatrix3D WtoT = new PMatrix3D(TtoW);
-		// WtoT.transpose();
-		// PVector dirInT = WtoT.mult(ray.d, null);
-		// PVector dirOutT = new PVector();
-		// switch (hit.mtl.type) {
-		// case DIFFUSE:
-		// 		dirOutT = sampleHemisphere_cosine(random(1), random(1));
-		// 		break;
-		// case SPECULAR:
-		// 		dirOutT.set(dirInT.x, dirInT.y, -dirInT.z);
-		// 		break;
-		// }
-		// ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
-		// TtoW.mult(dirOutT, ray.d);
-		
-
-		// choose next ray directly in world space
-		//
 		// prepare basis of tangent space
 		PVector T = new PVector();
 		PVector B = new PVector();
