@@ -29,15 +29,15 @@ void createScene() {
 	
 	// create some materials for objects
 	Material white	= new Material(null, new PVector(0.6, 0.6, 0.6), MtlType.DIFFUSE);
-	Material red	= new Material(null, new PVector(0.9, 0.1, 0.1), MtlType.DIFFUSE);
-	Material green	= new Material(null, new PVector(0.1, 0.9, 0.1), MtlType.DIFFUSE);
-	Material mirror	= new Material(null, new PVector(0.9, 0.9, 0.9), MtlType.SPECULAR);
+	Material red	= new Material(null, new PVector(0.8, 0.2, 0.2), MtlType.DIFFUSE);
+	Material green	= new Material(null, new PVector(0.2, 0.8, 0.2), MtlType.DIFFUSE);
+	Material mirror	= new Material(null, new PVector(0.9, 0.6, 0.1), MtlType.SPECULAR);
 	Material light	= new Material(new PVector(10,10,10), null);
 	
 	// create spheres
 	spheres = new Sphere[] {
-	    new Sphere(new PVector(-1, 0, 0), 2,  white), // ball left
-	    new Sphere(new PVector( 1, 0, 0), 2, mirror), // ball right
+	    new Sphere(new PVector(-2 ,-1.5, 0), 2,  white), // ball left
+	    new Sphere(new PVector( 2 , 1.5, 1), 2, mirror), // ball right
 	    new Sphere(new PVector( 0,-2,10), 3,  light), // light
 	    new Sphere(new PVector( 105, 0, 0), 100, green), // wall left
 	    new Sphere(new PVector(-105, 0, 0),	100,   red), // wall right
