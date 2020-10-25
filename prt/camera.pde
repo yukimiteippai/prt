@@ -5,7 +5,7 @@ class Camera {
 
 	Camera(PVector p, PVector target, float f) {
 		pos = p;
-		flen = f;
+		flen = f/35.0;
 
 		PVector z = target.sub(p).normalize();		
 		PVector x = z.cross(new PVector(0,0,1)).normalize();

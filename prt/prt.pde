@@ -22,7 +22,7 @@ void setup() {
 // initialize camera, environment, and spheres.
 void createScene() {
 	// set the camera
-	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 1.5);
+	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 55);
 	
 	// set the background emissiomn
 	environment = new Material(new PVector(0.6, 0.7, 0.8), null);
