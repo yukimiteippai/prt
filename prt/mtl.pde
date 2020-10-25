@@ -19,4 +19,10 @@ class Material {
 		reflection = r;
 		type = MtlType.DIFFUSE;
 	}
+
+	PVector Color(){
+		if(reflection != null)return reflection;
+		if(emission != null)return emission;
+		return new PVector(0,0,0);
+	}
 }
