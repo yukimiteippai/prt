@@ -28,7 +28,7 @@ class Sphere {
 
 		if (tmin<t && t<tmax) {
 			Hit hit = new Hit();
-			hit.dist = t;
+			hit.distance = t;
 			hit.pos = PVector.add(ray.o, PVector.mult(ray.d, t));
 			hit.normal = PVector.sub(hit.pos, this.pos).normalize();
 			hit.mtl = this.mtl;
