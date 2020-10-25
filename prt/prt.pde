@@ -3,8 +3,8 @@ void setup() {
 	size(512,512);
 }
 
-// calculate color on (x, y)
 color render(int x, int y) {
+	// define color with x and y
 	PVector result = new PVector((float)x/width, (float)y/height, 0);
 	return toColor(result);
 }
@@ -14,7 +14,7 @@ void draw() {
 	loadPixels();
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
-			pixels[y*width + x] = render(x, y);
+			pixels[y*width + x] = render(x, y); // calculate color for each pixel on (x, y)
 		}
 	}
 	updatePixels();
