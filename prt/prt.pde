@@ -74,27 +74,25 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 // trace the ray and return the radiance incoming from its direction.
 PVector trace(Ray ray, int n) {
-	// terminate recursion at some depth
-	if (10<n) return new PVector(0, 0, 0);
+	if (10<n) // terminate recursion at some depth
+		return new PVector(0, 0, 0);
 
-	// receive nearest intersection info
-	Hit hit = findNearestIntersection(ray, 0.0001, 100000);
 
-	// if the ray has no intersection, retutn environment emission.
-	if (hit == null) return environment.emission;
+	Hit hit = findNearestIntersection(ray, 0.0001, 100000); // receive nearest intersection info
+	PVector result = new PVector(0,0,0); // prepare the color to return.
 
-	
-	// prepare to accumulate radiance in "result"
-	PVector result = new PVector(0,0,0);
 
-	// if the surface has emission, add it.
-	if (hit.mtl.emission != null)
+	if (hit == null) // if the ray has no intersection, retutn environment emission.
+		return environment.emission;
+
+	if (hit.mtl.emission != null) // if the surface has emission, add it.
 		result.add(hit.mtl.emission);
 
 
-	// if the surface has reflection, add it by tracing next ray.
+	// if the surface has reflection, add it tracing incoming ray.
 	if (hit.mtl.reflection != null) {
-		// prepare basis of tangent space
+
+		// generate tangent space basis
 		PVector T = new PVector();
 		PVector B = new PVector();
 		tangentspace_basis(hit.normal, T, B);
@@ -102,20 +100,24 @@ PVector trace(Ray ray, int n) {
 		// sample the reflecting direction depending on the reflectin type.
 		switch (hit.mtl.type) {
 		case DIFFUSE:
-			ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
+			/* update ray here using T, B, and sampleHemisphere_cosine() */
+			
 			PVector dir = sampleHemisphere_cosine(random(1), random(1));
-			ray.d = T.mult(dir.x).add(B.mult(dir.y)).add(hit.normal.mult(dir.z));
+			// ray.o = 
+			// ray.d = 
 			break;
 
 		case SPECULAR:
-			ray.o = PVector.add(hit.pos, PVector.mult(hit.normal, 0.0001));
-			ray.d = PVector.add(ray.d, PVector.mult(hit.normal, -2*PVector.dot(hit.normal, ray.d)));
+			/* update ray here with normal and current ray */
+			
+			// ray.o = 
+			// ray.d = 
 			break;
 		}
 
 		// add reflection to the result
 		// reflection is surface color times incidence that we trace next.
-		result.add( multC(hit.mtl.reflection, trace(ray, n+1)) );
+		result.add( /* surface color * incidence */ );
 	}
 
 	return result;
@@ -124,8 +126,11 @@ PVector trace(Ray ray, int n) {
 // calculate color on (x, y)
 color render(int x, int y) {
 	Ray ray = camera.ray(x, y, random(1), random(1)); // sample camera ray
-	accumlated_radiance[y*width+x].add(trace(ray,0)); // update the sum of sampled path contribusion
-	PVector average = PVector.div(accumlated_radiance[y*width+x], spp); // average the radiance
+	
+	// add new sample to accumulated_radiance, and calculate average
+	accumlated_radiance[y*width+x].add(trace(ray,0));
+	// PVector average =
+	
 	return toColor(average);
 }
 
