@@ -218,6 +218,7 @@ else return toColor(environment.emission);
 ### Ex. A
 1. 球体やカメラのパラメータを変更した画像を作ってください。
 2. 物体色を法線の値を使って決めてください。法線は`Hit`クラスの中に格納されています。
+
 ![](docs/exa_normal.png)
 
 
