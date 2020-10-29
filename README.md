@@ -225,11 +225,11 @@ else return toColor(environment.emission);
 
 
 ## たくさんの物体を表示する
-レイとシーン中の物体が複数の交点を持つとき、前後関係を正しく描画するためには一番近い交点を採用する必要があります。図のような状況では、a~d のうち一番近い点のa で交差したと判断し、赤い色を返すべきです。
+レイとシーン中の物体が複数の交点を持つとき、前後関係を正しく描画するためには目から一番近い交点を採用する必要があります。図のような状況では、a~d のうち一番近い点のa で交差したと判断し、赤い色を返すべきです。
 
 ![](docs/f_nearest.jpg)
 
-この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下ようにプログラムを書き換えてください。
+この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下のようにプログラムを書き換えてください。
 
 ### レイトレーシングの書き換え
 #### シーンの変更
@@ -269,12 +269,12 @@ void createScene() {
 ```
 
 #### `color render(int x, int y)`の変更
-一番近い交点の情報を返す関数`findNearestIntersection`を利用し、`render`を書き換えます。
+新しく一番近い交点の情報を返す関数`findNearestIntersection`を作って利用することとして、先に`render`を書き換えます。
 
 ```pde
 Hit hit = sphere.intersect(view, 0.0001, 10000);
 	↓ 書き換え
-Hit hit = findNearestIntersection(view, 0.0001, 10000);　// ここだけ違う
+Hit hit = findNearestIntersection(view, 0.0001, 10000);
 ```
 
 #### `findNearestIntersection`の追加
@@ -285,15 +285,16 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	Hit hit = null;
 
 	// ここに一番近い交点を探し、hit に代入する処理を書く
+	////////////////////////////////////////////
 
 
 
 
 
 
+	////////////////////////////////////////////
 
-
-	// 球が裏面の場合は法線を反転する
+	// 最後に、球が裏面の場合は法線を反転する
 	if (hit != null && PVector.dot(ray.d, hit.normal)>0) {
 		hit.normal.mult(-1);
 	}
