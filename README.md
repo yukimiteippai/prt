@@ -218,7 +218,7 @@ else return toColor(environment.emission);
 ### Ex. A
 1. 球体やカメラのパラメータを変更した画像を作ってください。
 2. 物体色を法線の値を使って決めてください。法線は`Hit`クラスの中に格納されています。
-![](docs/exb_normal.png)
+![](docs/exa_normal.png)
 
 
 ---
@@ -311,7 +311,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 | `hit.material.Color()` で描画 | `hit.normal` で描画 |
 |:-:|:-:|
-| ![](docs/exc_color.png) | ![](docs/exc_normal.png) |
+| ![](docs/exb_color.png) | ![](docs/exb_normal.png) |
 
 ---
 
