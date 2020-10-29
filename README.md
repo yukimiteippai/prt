@@ -64,7 +64,6 @@ void draw() {
 		}
 	}
 	updatePixels();
-  save("../docs/coords.png");
 }
 ```
 
@@ -159,7 +158,7 @@ color render(int x, int y) {
 	
 	// レイと物体の交点があれば、物体の色を返す
 	// なければ背景の色を返す
-	if(hit != null) return toColor(hit.mtl.Color()); // ▼
+	if(hit != null) return toColor(hit.material.Color()); // ▼
 	else return toColor(environment.emission);
 }
 ```
@@ -193,10 +192,10 @@ class Ray {
 `Hit`クラスの内容はつぎのようになっています。
 ```pde
 class Hit {
-	float distance;	// 視点から交点までの距離
-	PVector pos;	// 交点の位置
-	PVector normal;	// 交点の法線
-	Material mtl;	// 交点の材質
+	float distance;		// 視点から交点までの距離
+	PVector position;	// 交点の位置
+	PVector normal;		// 交点の法線
+	Material material;	// 交点の材質
 }
 ```
 
@@ -204,10 +203,15 @@ class Hit {
 得られた`Hit` 情報を使って最終的な色を求めます。ここではa)物体の交点があれば物体色を返し、b)無ければ背景色を返すという処理をしています。
 交点がないとき`hit == null`なので、if文で判定しています。
 
+```pde
+if(hit != null) return toColor(hit.material.Color());
+else return toColor(environment.emission);
+```
+
 ### Ex. B
 1. 球体やカメラのパラメータを変更した画像を作ってください。
 2. 物体色を、その点の法線としてください。法線は`Hit`クラスの中に格納されています。
-<!-- ![](docs/exb_normal.png) -->
+![](docs/exb_normal.png)
 
 
 ---
@@ -218,14 +222,14 @@ class Hit {
 
 ![](docs/f_nearest.jpg)
 
-この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`rener`のほうで利用するようにします。以下ようにプログラムを書き換えてください。
+この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下ようにプログラムを書き換えてください。
 
 ### レイトレーシングの書き換え
 #### シーンの変更
 複数のオブジェクトを配置します。まずグローバル変数で宣言した球体を配列にします。
 ```pde
 Sphere sphere;
-	↓
+	↓ 書き換え
 Sphere[] spheres;
 ```
 次に`createScene`を以下で置き換えてください。
@@ -324,12 +328,12 @@ PVector trace(Ray ray, int n) {
 	if (hit == null) // if the ray has no intersection, retutn environment emission.
 		return environment.emission;
 
-	if (hit.mtl.emission != null) // if the surface has emission, add it.
-		result.add(hit.mtl.emission);
+	if (hit.material.emission != null) // if the surface has emission, add it.
+		result.add(hit.material.emission);
 
 
 	// if the surface has reflection, add it tracing incoming ray.
-	if (hit.mtl.reflection != null) {
+	if (hit.material.reflection != null) {
 
 		// generate tangent space basis
 		PVector T = new PVector();
@@ -337,7 +341,7 @@ PVector trace(Ray ray, int n) {
 		tangentspace_basis(hit.normal, T, B);
 
 		// sample the reflecting direction depending on the reflectin type.
-		switch (hit.mtl.type) {
+		switch (hit.material.type) {
 		case DIFFUSE:
 			/* update ray here using T, B, and sampleHemisphere_cosine() */
 			
