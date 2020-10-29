@@ -301,7 +301,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 関数が完成し、`render`内で物体色や法線を描画をすると次のような画像が得られます。
 
-| `hit.mtl.Color()` で描画 | `hit.normal` で描画 |
+| `hit.material.Color()` で描画 | `hit.normal` で描画 |
 |:-:|:-:|
 | ![](docs/exc_color.png) | ![](docs/exc_normal.png) |
 

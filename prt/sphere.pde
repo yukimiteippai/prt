@@ -1,13 +1,13 @@
 class Sphere {
-	PVector pos;	// center of sphere
-	float r; 		// radius
-	Material mtl;	// material
+	PVector position;	// center of sphere
+	float r; 			// radius
+	Material material;	// material
 
-	Sphere(PVector p, float rr, Material mm) {pos = p; r = rr; mtl=mm;}
+	Sphere(PVector p, float rr, Material mm) {position = p; r = rr; material=mm;}
 
 	// test if the ray hits and return the distance. if not, return -1.
 	float distance(Ray ray) {
-		PVector thispos = new PVector(this.pos.x, this.pos.y, this.pos.z);
+		PVector thispos = new PVector(this.position.x, this.position.y, this.position.z);
 		PVector po = PVector.sub(ray.o, thispos);
 		float b = PVector.dot(ray.d, po);
 		float c = PVector.dot(po, po) - r*r;
@@ -29,9 +29,9 @@ class Sphere {
 		if (tmin<t && t<tmax) {
 			Hit hit = new Hit();
 			hit.distance = t;
-			hit.pos = PVector.add(ray.o, PVector.mult(ray.d, t));
-			hit.normal = PVector.sub(hit.pos, this.pos).normalize();
-			hit.mtl = this.mtl;
+			hit.position = PVector.add(ray.o, PVector.mult(ray.d, t));
+			hit.normal = PVector.sub(hit.position, this.position).normalize();
+			hit.material = this.material;
 			return hit;
 		}
 		else return null;
