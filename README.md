@@ -83,15 +83,6 @@ color render(int x, int y) {
 
 このサンプルを書き換えていき、パストレーシングを行います。
 
-<!-- ### Ex. A
-座標から色を計算することに慣れるため、`color render(int x, int y)` の中を書き換えて以下の画像のどれかを作ってください。似たような処理であれば自分で考えたものでも良いです。
-
-![](docs/exa_circle.png)
-![](docs/exa_pol.png)
-
-![](docs/exa_checker.png)
-![](docs/exa_tris.png) -->
-
 ---
 
 ## 一つの球体を表示する
