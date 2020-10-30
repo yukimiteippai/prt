@@ -40,7 +40,7 @@
 
 #### `void setup()`
 
-```pde
+```processing
 void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
@@ -51,7 +51,7 @@ void setup() {
 
 #### `void draw()`
 
-```pde
+```processing
 void draw() {
 	// pixels を更新
 	loadPixels();
@@ -69,7 +69,7 @@ void draw() {
 
 #### `color render(int x, int y)`
 
-```pde
+```processing
 color render(int x, int y) {
 	// define color with x and y
 	PVector result = new PVector((float)x/width, (float)y/height, 0);
@@ -98,6 +98,7 @@ Camera camera;
 Material environment;
 Sphere sphere;
 ```
+
 ここにカメラ、背景、物体(球)を保持します。
 
 #### 2. シーンを定義する関数を追加
@@ -130,7 +131,7 @@ void createScene() {
 
 そして`void setup()`内で`createScene()`を呼び出します。
 
-```pde
+```processing
 void setup() {
 	colorMode(RGB, 1.0);
 	size(512,512);
@@ -141,7 +142,7 @@ void setup() {
 
 #### 3. `color render(int x, int y)` を書き換え
 
-```pde
+```processing
 color render(int x, int y) {
 	Ray view = camera.ray(x, y, random(1), random(1)); // ★
 	Hit hit = sphere.intersect(view, 0.0001, 10000); // ◆
@@ -152,6 +153,7 @@ color render(int x, int y) {
 	else return toColor(environment.emission);
 }
 ```
+
 ここで各ピクセル方向への**★視線の生成**, 球体との**◆交差判定**, 判定結果による**▼描画色の決定**を行っています。現時点でプログラムで実行すると、シーンで配置したように中央に赤い球体が出ます。
 
 ![](docs/onesphere.png)
@@ -166,7 +168,7 @@ color render(int x, int y) {
 
 `Ray view = camera.ray(x, y, random(1), random(1));`
 
-```pde
+```processing
 class Ray {
 	PVector o; // レイの原点(視点)
 	PVector d; // レイの方向
@@ -182,7 +184,8 @@ class Ray {
 この関数は、もし指定した区間の中に物体との交点があれば、その点の情報`Hit`を返します。交点が無ければ`null`を返します。
 
 `Hit`クラスの内容はつぎのようになっています。
-```pde
+
+```processing
 class Hit {
 	float distance;		// 視点から交点までの距離
 	PVector position;	// 交点の位置
@@ -201,7 +204,7 @@ processing における`null` とは、メモリ上にオブジェクトの実�
 得られた`Hit` 情報を使って最終的な色を求めます。ここでは物体の交点があれば物体色`hit.material.Color()`を返し、無ければ背景色`environment.emission`を返すという処理をしています。
 交点がないとき`hit == null`なので、if文で判定しています。
 
-```pde
+```processing
 if(hit != null) return toColor(hit.material.Color());
 else return toColor(environment.emission);
 ```
@@ -226,13 +229,16 @@ else return toColor(environment.emission);
 ### レイトレーシングの書き換え
 #### シーンの変更
 複数のオブジェクトを配置します。まずグローバル変数で宣言した球体を配列にします。
-```pde
+
+```processing
 Sphere sphere;
 	↓ 書き換え
 Sphere[] spheres;
 ```
+
 次に`createScene`を以下で置き換えてください。
-```pde
+
+```processing
 void createScene() {
 	// (0,-10,2)から(0,0,0)を見るカメラを設定. 焦点距離は55mm.
 	camera = new Camera(new PVector(0,-10,2), new PVector(0,0,2), 55);
@@ -263,7 +269,7 @@ void createScene() {
 #### `color render(int x, int y)`の変更
 新しく一番近い交点の情報を返す関数`findNearestIntersection`を作って利用することとして、先に`render`を書き換えます。
 
-```pde
+```processing
 Hit hit = sphere.intersect(view, 0.0001, 10000);
 	↓ 書き換え
 Hit hit = findNearestIntersection(view, 0.0001, 10000);
@@ -272,7 +278,7 @@ Hit hit = findNearestIntersection(view, 0.0001, 10000);
 #### `findNearestIntersection`の追加
 最後に、`findNearestIntersection`を作ります。
 
-```pde
+```processing
 Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	Hit hit = null;
 
@@ -294,6 +300,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 	return hit;
 }
 ```
+
 いまこの中身は不完全なので、処理を考えてください。
 
 ### Ex. B
@@ -315,7 +322,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 
 
-```pde
+```processing
 PVector trace(Ray ray, int n) {
 	if (10<n) // terminate recursion at some depth
 		return new PVector(0, 0, 0);
