@@ -180,7 +180,7 @@ class Ray {
 
 ![](docs/f_raycast.png)
 
-このために`Hit sphere.intersect(ray, tmin, tmax)`という関数を使います。引数はレイと探索したい物体との距離の区間です。カメラの前にある物体を判定したいので、区間にはとりあえず十分に広い正の範囲を設定します。
+このために`Hit sphere.intersect(ray, tmin, tmax)`という関数を使います。引数はレイと追跡したい物体との距離の区間です。カメラの前にある物体を判定したいので、区間にはとりあえず十分に広い正の範囲を設定します。
 この関数は、もし指定した区間の中に物体との交点があれば、その点の情報`Hit`を返します。交点が無ければ`null`を返します。
 
 `Hit`クラスの内容はつぎのようになっています。
@@ -320,65 +320,106 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 ### 処理の流れ
 
+照明のあたった物体の色は、入射光・物体色として求められます。物体色のほうは`material`に保持されていますが、入射光を得るためには再びレイトレーシングによってその方向を追跡します。
+もし追跡結果の交点が光源であれば、その強さが入射光です。
+交点が反射面である場合には、さらに追跡を続けます。
+
+以上の機能を`PVector trace(Ray ray, int n)`という関数として追加します。
+あまりに反射を繰り返し続けることを防ぐため反射回数`n`をカウントし、適当な回数で処理を打ち切ります。
 
 
 ```processing
 PVector trace(Ray ray, int n) {
-	if (10<n) // terminate recursion at some depth
-		return new PVector(0, 0, 0);
+
+	// 反射回数が多いとき追跡をやめる(黒を返す)
+	if (10<n) return new PVector(0, 0, 0);
+
+	Hit hit = findNearestIntersection(ray, 0.0001, 100000); // 光線と物体の交点を探す
+	PVector result = new PVector(0,0,0); // 結果用の変数
+
+	// 交点がないとき背景からの放射を返す
+	if (hit == null) return environment.emission;
+
+	// 光源にあたったとき(emission があるとき) その値を結果に足す
+	if (hit.material.emission != null) result.add(hit.material.emission);
 
 
-	Hit hit = findNearestIntersection(ray, 0.0001, 100000); // receive nearest intersection info
-	PVector result = new PVector(0,0,0); // prepare the color to return.
-
-
-	if (hit == null) // if the ray has no intersection, retutn environment emission.
-		return environment.emission;
-
-	if (hit.material.emission != null) // if the surface has emission, add it.
-		result.add(hit.material.emission);
-
-
-	// if the surface has reflection, add it tracing incoming ray.
+	// 反射面に当たったとき(reflection があるとき)、さらに入射方向を追跡し、反射光を結果に足す
 	if (hit.material.reflection != null) {
 
-		// generate tangent space basis
+		// 接面の基(T, B, hit.normal)を用意する
 		PVector T = new PVector();
 		PVector B = new PVector();
 		tangentspace_basis(hit.normal, T, B);
 
-		// sample the reflecting direction depending on the reflectin type.
+		// 反射の種類によって追跡する方向を決め、ray を更新する
 		switch (hit.material.type) {
 		case DIFFUSE:
-			/* update ray here using T, B, and sampleHemisphere_cosine() */
-			
+			// 拡散反射する光線の原点と方向を更新する
+
 			PVector dir = sampleHemisphere_cosine(random(1), random(1));
-			// ray.o = 
-			// ray.d = 
+			ray.o = 
+			ray.d = 
 			break;
 
 		case SPECULAR:
-			/* update ray here with normal and current ray */
+			// 鏡面反射する光線の原点と方向を更新する
 			
-			// ray.o = 
-			// ray.d = 
+			ray.o = 
+			ray.d = 
 			break;
 		}
 
-		// add reflection to the result
-		// reflection is surface color times incidence that we trace next.
-		result.add( /* surface color * incidence */ );
+		result.add( /*　ray方向から入ってくる入射光と物体色の積を結果に足す　*/ );
 	}
 
 	return result;
 }
 ```
 
+`render` のほうで`trace`を呼び出します。
+`trace`では本来あらゆる方向から入射してくる光を一方向だけ選んで追跡していますが、この処理を何度もおこなった平均を求めることで広い入射方向をカバーします。
+
+ここでは実行画面の1フレームごとにサンプルをおこない、その都度平均値を描画します。
+
+
+* **大域変数に以下を追加**
+```processing
+int spp = 0; // サンプルの大きさ
+PVector[] accumlated_radiance; // 寄与の合計を入れておく配列
+```
+
+* **`void draw()`の中でサンプルの大きさをカウントする**
+```processing
+spp++;
+```
+
+* **`color render(int x, int y)` で`trace` の平均を求める**
+```processing
+color render(int x, int y) {
+	Ray ray = camera.ray(x, y, random(1), random(1));
+	accumlated_radiance[y*width+x].add(trace(ray,0));
+	PVector average = PVector.div(accumlated_radiance[y*width+x], spp);
+	return toColor(average);
+}
+```
+
 ### Ex. C
 
-レイが物体と交差した点において、反射方向をさらに追跡することにより陰影を計算してください。
+`PVector trace(Ray ray, int n)`の空欄を埋め、反射方向を繰り返し追跡することにより陰影を計算してください。
 
-`sampleHemisphere_cosine`で拡散反射の入射方向を求めることができますが、面の向きに沿った方向への変換が必要です。
+#### `case DIFFUSE:`
+
+`sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向への変換が必要です。
+平面の基は下図のように`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
+
+![](docs/f_basis.jpg)
+
+#### `case SPECULAR:`
+
+鏡面反射する面の入射方向を求めてください。入射方向、出射方向、法線は以下のような関係になっています。
+
+<img src="docs/f_spec.jpg" width="350">
 
 ---
 
