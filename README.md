@@ -221,7 +221,7 @@ else return toColor(environment.emission);
 ## たくさんの物体を表示する
 レイとシーン中の物体が複数の交点を持つとき、前後関係を正しく描画するためには目から一番近い交点を採用する必要があります。図のような状況では、a~d のうち一番近い点のa で交差したと判断し、赤い色を返すようにします。
 
-![](docs/f_nearest.jpg)
+<img src="docs/f_nearest.jpg" width="600">
 
 この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下のようにプログラムを書き換えてください。
 
