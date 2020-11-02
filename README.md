@@ -96,8 +96,11 @@ Camera camera;
 Material environment;
 Sphere sphere;
 ```
+`void setup()`や`void draw()`などのメソッドより外側に上のコードをコピペします。
+ここに宣言した変数はグローバル変数(または大域変数)と呼ばれ、processing のすべての場所から使うことができます
+( [スコープ](http://www.design.kyushu-u.ac.jp/~morimoto/teaching/materials/drawing0.html#2-%E3%82%B9%E3%82%B3%E3%83%BC%E3%83%97) )。
 
-ここにカメラ、背景、物体(球)を保持します。
+ここにカメラ、背景、物体(球)を保持し、処理のために使います。
 
 #### 2. シーンを定義する関数を追加
 
@@ -389,7 +392,7 @@ PVector trace(Ray ray, int n) {
 実行時1フレームごとにサンプルをおこない、その都度での平均値を描画するというふうにプログラムを書き換えます。
 
 
-* **大域変数に以下を追加**
+* **グローバル変数に以下を追加**
 ```processing
 int spp = 0; // サンプルの大きさ
 PVector[] accumlated_radiance; // 寄与の合計を入れておく配列
