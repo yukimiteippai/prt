@@ -34,7 +34,7 @@
 
 レイトレーシングは画像が持つそれぞれの画素において、直進する光線(レイ)を追跡することによってその先に何が見えるのかを計算し、色を決定します。このために光線と形状の交点を計算することをレイキャスティングといいます。
 
-<img src="docs/f_rt.jpg" width="400">
+<img src="docs/0_rt.jpg" width="400">
 
 
 ## パストレーシングの説明
@@ -62,7 +62,7 @@ f(\bar{x})d\mu(\bar{x})
 \bar{x}
 "> が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さや経由する物体の反射率等の積です。
 
-<img src="docs/f_path.png" width="500">
+<img src="docs/0_path.png" width="500">
 
 
 積分を計算機で解く方法の一つは区分求積法で、限られた数の長方形を用いて関数を近似します。
@@ -70,7 +70,7 @@ f(\bar{x})d\mu(\bar{x})
 
 |長方形が少ないとき|長方形が多いとき|
 |:-:|:-:|
-|<img src="docs/f_dq_l.jpg" height="250"> | <img src="docs/f_dq_h.jpg" height="250">|
+|<img src="docs/0_dq_l.jpg" height="250"> | <img src="docs/0_dq_h.jpg" height="250">|
 
 しかし、
 <img src="https://render.githubusercontent.com/render/math?math=
@@ -91,7 +91,7 @@ M
 
 |サンプルが小さいとき|サンプルが大きいとき|
 |:-:|:-:|
-|<img src="docs/f_mc_l.jpg" height="275">|<img src="docs/f_mc_h.jpg" height="275">|
+|<img src="docs/0_mc_l.jpg" height="275">|<img src="docs/0_mc_h.jpg" height="275">|
 
 
 このような確率的に積分を計算する方法はモンテカルロ法と呼ばれ、これをレンダリング方程式へ応用したのがパストレーシングです。
@@ -231,7 +231,7 @@ color render(int x, int y) {
 
 ここで各ピクセル方向への**★視線の生成**, 球体との**◆交差判定**, 判定結果による**▼描画色の決定**を行っています。現時点でプログラムで実行すると、シーンで配置したように中央に赤い球体が出ます。
 
-![](docs/onesphere.png)
+![](docs/a_onesphere.png)
 
 
 ### レイキャスティングの基本
@@ -252,7 +252,7 @@ class Ray {
 
 視線が決まったらそれが物体と交差するかを判定し、交点の情報を計算します。
 
-![](docs/f_raycast.png)
+![](docs/a_raycast.png)
 
 このために`Hit Sphere.intersect(ray, tmin, tmax)`という関数を使います。
 これは、球と視線が距離の区間 ( tmin, tmax ) の範囲で交差するかを判定します。
@@ -287,7 +287,7 @@ else return toColor(environment.emission);
 1. 球体やカメラのパラメータを変更した画像を作ってください。
 2. 物体色を法線の値を使って決めてください。法線は`Hit`クラスの中に格納されています。
 
-![](docs/exa_normal.png)
+![](docs/a_ex_normal.png)
 
 
 ---
@@ -296,7 +296,7 @@ else return toColor(environment.emission);
 ## たくさんの物体を表示する
 レイとシーン中の物体が複数の交点を持つとき、前後関係を正しく描画するためには目から一番近い交点を採用する必要があります。図のような状況では、a~d のうち一番近い点のa で交差したと判断し、赤い色を返すようにします。
 
-<img src="docs/f_nearest.jpg" width="600">
+<img src="docs/b_nearest.jpg" width="600">
 
 この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下のようにプログラムを書き換えてください。
 
@@ -384,7 +384,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 | `hit.material.Color()` で描画 | `hit.normal` で描画 |
 |:-:|:-:|
-| ![](docs/exb_color.png) | ![](docs/exb_normal.png) |
+| ![](docs/b_ex_color.png) | ![](docs/b_ex_normal.png) |
 
 ---
 
@@ -398,7 +398,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 もし追跡結果の交点が光源であれば、その強さが入射光です。
 交点が反射面である場合には、さらに追跡を続けます。
 
-![](docs/f_recur.png)
+![](docs/c_recur.png)
 
 以上の機能を`PVector trace(Ray ray, int n)`という関数として追加します。
 
@@ -466,7 +466,7 @@ PVector trace(Ray ray, int n) {
 一つの経路からなる一つのサンプルからはあまり正確な光の量が得られませんが、たくさんのサンプルをあわせた集合を考え、運ばれる光の量の平均を求めることができます。
 この方法でより広い経路をカバーし、より正解に近い結果を得ることができます。
 
-![](docs/f_path.png)
+![](docs/0_path.png)
 
 *注目している画素において一本の経路を3回サンプルしたとき、画素に入ってくる光を全サンプルを利用して推定したい。
 そのためにはすべての経路から運ばれる光を足して、全体の要素数である3で割ればよい。*
@@ -508,8 +508,8 @@ color render(int x, int y) {
 
 #### `case DIFFUSE:`
 
-<img src="docs/exc_d.png" height="250">
-<img src="docs/f_basis.jpg" height="250">
+<img src="docs/c_ex_d.png" height="250">
+<img src="docs/c_ex_f_basis.jpg" height="250">
 
 材質が光線を拡散反射する場合です。
 `sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向へ変換するため、図のように ( x, y, z ) 空間でサンプルした方向を ( T, B, n ) へ移します。基は`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
@@ -517,8 +517,8 @@ color render(int x, int y) {
 
 #### `case SPECULAR:`
 
-<img src="docs/exc_s.png" height="250">
-<img src="docs/f_spec.jpg" height="250">
+<img src="docs/c_ex_s.png" height="250">
+<img src="docs/c_ex_f_s.jpg" height="250">
 
 材質が光線を鏡面反射する場合です。<br>
 鏡面反射の入射方向を求めてください。入射方向、出射方向、法線は図のような関係になっています。
