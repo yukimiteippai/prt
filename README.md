@@ -159,7 +159,7 @@ color render(int x, int y) {
 
 ## 一つの球体を表示する
 
-まずは、各ピクセルにおいてレイキャスティングがどのように物体の色を表示しているかを一つの物体を表示するプログラムで説明します。以下の指示に従ってprt.pde のプログラムを書き換えてください。
+まずは、各ピクセルにおいてレイキャスティングをおこなうことで一つの物体を表示します。以下の指示に従ってprt.pde のプログラムを書き換えてください。
 
 ### レイキャスティング機能の追加
 
@@ -239,7 +239,7 @@ color render(int x, int y) {
 
 #### ★視線の生成
 
-まず、ピクセルの位置が決まることで**どこ**から**どの方向**を視線が向いているかが決定します。今回のプログラムでは、`Camera.ray`という関数を使って視線を求めます。視点と視線の方向は`Ray`クラスに保持されます。
+まず、カメラの姿勢と画像上の位置が決まることで**どこ**から**どの方向**を視線が向いているかが決定します。今回のプログラムでは、`Camera.ray`という関数を使って視線を求めます。視点と視線の方向は`Ray`クラスに保持されます。
 
 ```processing
 class Ray {
@@ -300,7 +300,7 @@ else return toColor(environment.emission);
 
 この処理をおこなう関数`Hit findNearestIntersection(Ray ray, float tmin, float tmax)`を追加し、`render`のほうで利用するようにします。以下のようにプログラムを書き換えてください。
 
-### レイキャスティングの書き換え
+### レイキャスト関数の書き換え
 #### シーンの変更
 複数のオブジェクトを配置します。まずグローバル変数で宣言した球体を配列に変更します。
 
@@ -390,7 +390,7 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 
 ## パストレーシングで陰影をつける
 
-現時点で配置した物体に設定した色を描画することができました。最後に物体面での反射を繰り返し追跡することにより照明を再現します。
+現時点で配置した物体に設定した色を描画することができました。最後に物体面での反射を繰り返し追跡することにより照明を計算します。
 
 ### 追跡処理の流れ
 
@@ -401,7 +401,9 @@ Hit findNearestIntersection(Ray ray, float tmin, float tmax) {
 ![](docs/f_recur.png)
 
 以上の機能を`PVector trace(Ray ray, int n)`という関数として追加します。
-あまりに反射を繰り返し続けることを防ぐため反射回数`n`をカウントし、適当な回数で処理を打ち切ります。
+
+以下のコードでは反射を繰り返し追跡するために再起的に`trace`を呼び出すことを想定しています。
+その際あまりに反射を繰り返し続けることを防ぐため反射回数`n`をカウントし、適当な回数で処理を打ち切ります。
 
 
 ```processing
@@ -506,23 +508,20 @@ color render(int x, int y) {
 
 #### `case DIFFUSE:`
 
+<img src="docs/exc_d.png" height="250">
+<img src="docs/f_basis.jpg" height="250">
+
 材質が光線を拡散反射する場合です。
+`sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向へ変換するため、図のように ( x, y, z ) 空間でサンプルした方向を ( T, B, n ) へ移します。基は`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
 
-![](docs/exc_d.png)
-
-`sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向へ変換するため、下図のように ( x, y, z ) 空間でサンプルした方向を ( T, B, n ) へ移します。基は`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
-
-![](docs/f_basis.jpg)
 
 #### `case SPECULAR:`
 
-材質が光線を鏡面反射する場合です。
+<img src="docs/exc_s.png" height="250">
+<img src="docs/f_spec.jpg" height="250">
 
-![](docs/exc_s.png)
-
-鏡面反射の入射方向を求めてください。入射方向、出射方向、法線は以下のような関係になっています。
-
-<img src="docs/f_spec.jpg" width="350">
+材質が光線を鏡面反射する場合です。<br>
+鏡面反射の入射方向を求めてください。入射方向、出射方向、法線は図のような関係になっています。
 
 ---
 
