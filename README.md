@@ -39,31 +39,48 @@
 
 ## パストレーシングの説明
 
-照明を計算する手法であるパストレーシングについて説明します。これは次に示すレンダリング方程式を解きます。
-現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、画素の応答
+照明を計算する手法であるパストレーシングの説明をします。
+
+これは次に示すレンダリング方程式を解きます。
+現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、ある画素に対応するセンサの応答
 <img src="https://render.githubusercontent.com/render/math?math=
 I
 "> は
 
 <img src="https://render.githubusercontent.com/render/math?math=
 I = \int_{{M}}f(\bar{x})d\mu(\bar{x})
-"> となります。
+"> です。
 
 ここで、
 <img src="https://render.githubusercontent.com/render/math?math=
 M\ni\bar{x}
-"> は目と光源を結ぶ経路、
+"> は目と光源を結ぶ経路です。
 <img src="https://render.githubusercontent.com/render/math?math=
 f(\bar{x})d\mu(\bar{x})
 "> は
 <img src="https://render.githubusercontent.com/render/math?math=
 \bar{x}
-"> の画素の微小面積に対する寄与です。
+"> が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さと経由する物体の反射率等の積です。
 
 <img src="docs/f_path.png" width="500">
 
 
-レンダリング方程式の数値的な解法の一つがパストレーシングで、
+レンダリング方程式の数値的な解法の一つがパストレーシングです。
+
+---
+
+積分を計算機で解く方法の一つは区分求積法で、限られた数の長方形を用いて関数を近似します。
+長方形の数を増やすことでより精度の高い近似ができます。
+
+|長方形が少ないとき|長方形が多いとき|
+|:-:|:-:|
+|<img src="docs/f_dq_l.jpg" height="250"> | <img src="docs/f_dq_h.jpg" height="250">|
+
+しかし、
+<img src="https://render.githubusercontent.com/render/math?math=
+M
+"> 全体をこの方法で足し合わせるのは計算負荷が高く、また無駄も大きいです。
+そこで、
 <img src="https://render.githubusercontent.com/render/math?math=
 \bar{x}
 "> の標本抽出によって
@@ -71,8 +88,21 @@ f(\bar{x})d\mu(\bar{x})
 I
 "> を推定します。
 
+母集団
+<img src="https://render.githubusercontent.com/render/math?math=
+M
+"> から
+<img src="https://render.githubusercontent.com/render/math?math=
+\bar{x}
+"> を引いて評価します。より多くの標本を抽出することで面積を近似します。
 
-頂点間に障害物のない有効な経路を得るために、最も単純なパストレーシングではレイキャスティングを繰り返し行います。
+|サンプルが小さいとき|サンプルが大きいとき|
+|:-:|:-:|
+|<img src="docs/f_mc_l.jpg" height="275">|<img src="docs/f_mc_h.jpg" height="275">|
+
+
+レンダリング方程式を評価するために注目する画素のセンサと光源を結ぶ有効な経路を生成する必要があります。
+光源からの経路追跡では経路が小さい画素に到達しにくいため、最も単純なパストレーシングでは目のほうからレイキャスティングを繰り返し行います。
 
 
 ---
