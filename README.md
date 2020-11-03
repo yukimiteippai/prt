@@ -48,7 +48,7 @@ I
 "> は
 
 <img src="https://render.githubusercontent.com/render/math?math=
-I = \int_{{M}}f(\bar{x})d\mu(\bar{x})
+I = \int_{M} f(\bar{x}) d\mu(\bar{x})
 "> です。
 
 ここで、
@@ -65,10 +65,6 @@ f(\bar{x})d\mu(\bar{x})
 <img src="docs/f_path.png" width="500">
 
 
-レンダリング方程式の数値的な解法の一つがパストレーシングです。
-
----
-
 積分を計算機で解く方法の一つは区分求積法で、限られた数の長方形を用いて関数を近似します。
 長方形の数を増やすことでより精度の高い近似ができます。
 
@@ -80,7 +76,7 @@ f(\bar{x})d\mu(\bar{x})
 <img src="https://render.githubusercontent.com/render/math?math=
 M
 "> 全体をこの方法で足し合わせるのは計算負荷が高く、また無駄も大きいです。
-そこで、
+そこで
 <img src="https://render.githubusercontent.com/render/math?math=
 \bar{x}
 "> の標本抽出によって
@@ -91,18 +87,17 @@ I
 母集団
 <img src="https://render.githubusercontent.com/render/math?math=
 M
-"> から
-<img src="https://render.githubusercontent.com/render/math?math=
-\bar{x}
-"> を引いて評価します。より多くの標本を抽出することで面積を近似します。
+"> から経路の標本を引き、平均を評価します。より多くの標本を抽出することで標本が定義域を覆うことが期待できるので、近似の精度がよくなります。
 
 |サンプルが小さいとき|サンプルが大きいとき|
 |:-:|:-:|
 |<img src="docs/f_mc_l.jpg" height="275">|<img src="docs/f_mc_h.jpg" height="275">|
 
 
-レンダリング方程式を評価するために注目する画素のセンサと光源を結ぶ有効な経路を生成する必要があります。
-光源からの経路追跡では経路が小さい画素に到達しにくいため、最も単純なパストレーシングでは目のほうからレイキャスティングを繰り返し行います。
+このような確率的に積分を計算する方法はモンテカルロ法と呼ばれ、これをレンダリング方程式へ応用したのがパストレーシングです。
+
+実際の計算においては、注目する画素のセンサと光源を結ぶ有効な経路を生成してレンダリング方程式を評価する必要があります。
+光源からの経路追跡では経路が小さい画素に到達しにくいため、最も単純なパストレーシングでは目のほうからレイキャスティングを繰り返し行うことで経路の生成と光の輸送を同時に行います。
 
 
 ---
@@ -504,12 +499,19 @@ color render(int x, int y) {
 
 #### `case DIFFUSE:`
 
-`sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向への変換が必要です。
-平面の基は下図のように`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
+材質が光線を拡散反射する場合です。
+
+![](docs/exc_d.png)
+
+`sampleHemisphere_cosine(random(1), random(1))`で拡散反射の方向を求めることができますが、面の向きに沿った方向へ変換するため、下図のように ( x, y, z ) 空間でサンプルした方向を ( T, B, n ) へ移します。基は`T:PVector`, `B:PVector`, `Hit.normal`として用意されています。
 
 ![](docs/f_basis.jpg)
 
 #### `case SPECULAR:`
+
+材質が光線を鏡面反射する場合です。
+
+![](docs/exc_s.png)
 
 鏡面反射の入射方向を求めてください。入射方向、出射方向、法線は以下のような関係になっています。
 
