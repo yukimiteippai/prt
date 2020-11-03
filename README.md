@@ -50,6 +50,40 @@
 
 ## パストレーシングの説明
 
+照明を取り扱う手法であるパストレーシングについて説明します。これは次に示すレンダリング方程式を解きます。
+現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、画素の応答
+<img src="https://render.githubusercontent.com/render/math?math=
+I
+"> は
+
+<img src="https://render.githubusercontent.com/render/math?math=
+I = \int_{{M}}f(\bar{x})d\mu(\bar{x})
+"> となります。
+
+ここで、
+<img src="https://render.githubusercontent.com/render/math?math=
+M\ni\bar{x}
+"> は目と光源を結ぶ経路、
+<img src="https://render.githubusercontent.com/render/math?math=
+f(\bar{x})d\mu(\bar{x})
+"> は
+<img src="https://render.githubusercontent.com/render/math?math=
+\bar{x}
+"> の画素の微小面積に対する寄与です。
+
+<img src="docs/f_path.png" width="500">
+
+
+これをレンダリング方程式の数値的な解法の一つがパストレーシングで、
+<img src="https://render.githubusercontent.com/render/math?math=
+\bar{x}
+"> の標本抽出によって
+<img src="https://render.githubusercontent.com/render/math?math=
+I
+"> を推定します。
+
+
+頂点間に障害物のない、有効な経路を得るためにレイキャスティングを繰り返し用います。
 
 
 ---
