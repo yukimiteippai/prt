@@ -54,13 +54,13 @@ I = \int_{M} f(\bar{x}) d\mu(\bar{x})
 ここで、
 <img src="https://render.githubusercontent.com/render/math?math=
 M\ni\bar{x}
-"> は目と光源を結ぶ経路です。
+"> は注目している画素と光源を結ぶ経路です。
 <img src="https://render.githubusercontent.com/render/math?math=
 f(\bar{x})d\mu(\bar{x})
 "> は
 <img src="https://render.githubusercontent.com/render/math?math=
 \bar{x}
-"> が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さと経由する物体の反射率等の積です。
+"> が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さや経由する物体の反射率等の積です。
 
 <img src="docs/f_path.png" width="500">
 
@@ -462,6 +462,8 @@ PVector trace(Ray ray, int n) {
 
 ひとつのサンプルから正確な光の量を計算することは難しいですが、たくさんのサンプルを平均することでより広い入射をカバーし、より正解に近い結果を得ることができます。
 この例として実行時1フレームごとに新たなサンプルを引き、他のサンプルとあわせた平均を描画するという処理を実装します。
+
+
 
 
 * **グローバル変数に以下を追加**
