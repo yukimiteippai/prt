@@ -489,6 +489,16 @@ int spp = 0; // サンプル数
 PVector[] accumlated_radiance; // 寄与の合計を入れておく配列
 ```
 
+ついでに
+`setup`の中で`accumlated_radiance`を初期化します。
+
+```processing
+accumlated_radiance = new PVector[width*height];
+for (int i=0; i<width*height; i++) {
+	accumlated_radiance[i] = new PVector(0, 0, 0);
+}
+```
+
 * **`void draw()` の中でサンプル数をカウントする**
 ```processing
 void draw() {
