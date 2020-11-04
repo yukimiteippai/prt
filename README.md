@@ -48,24 +48,15 @@
 
 これは次に示すレンダリング方程式を解きます。
 現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、ある画素に対応するセンサの応答
-<img src="https://render.githubusercontent.com/render/math?math=
-I
-"> は
+<img src="https://render.githubusercontent.com/render/math?math=I"> は
 
-<img src="https://render.githubusercontent.com/render/math?math=
-I = \int_{M} f(\bar{x}) d\mu(\bar{x})
-"> です。
+<img src="https://render.githubusercontent.com/render/math?math=I = \int_{M} f(\bar{x}) d\mu(\bar{x})"> です。
 
 ここで、
-<img src="https://render.githubusercontent.com/render/math?math=
-M\ni\bar{x}
-"> は注目している画素と光源を結ぶ経路です。
-<img src="https://render.githubusercontent.com/render/math?math=
-f(\bar{x})d\mu(\bar{x})
-"> は
-<img src="https://render.githubusercontent.com/render/math?math=
-\bar{x}
-"> が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さや経由する物体の反射率等の積です。
+<img src="https://render.githubusercontent.com/render/math?math=M\ni\bar{x}"> は注目している画素と光源を結ぶ経路です。
+<img src="https://render.githubusercontent.com/render/math?math=f(\bar{x})d\mu(\bar{x})"> は
+<img src="https://render.githubusercontent.com/render/math?math=\bar{x}">
+が光源から運ぶ光による画素の微小面積に対する寄与で、光源の強さや経由する物体の反射率等の積です。
 
 <img src="docs/0_path.png" width="500">
 
@@ -78,21 +69,14 @@ f(\bar{x})d\mu(\bar{x})
 |<img src="docs/0_dq_l.jpg" height="250"> | <img src="docs/0_dq_h.jpg" height="250">|
 
 しかし、
-<img src="https://render.githubusercontent.com/render/math?math=
-M
-"> 全体をこの方法で足し合わせるのは計算負荷が高く、また無駄も大きいです。
+<img src="https://render.githubusercontent.com/render/math?math=M"> 全体をこの方法で足し合わせるのは計算負荷が高く、また無駄も大きいです。
 そこで
-<img src="https://render.githubusercontent.com/render/math?math=
-\bar{x}
-"> の標本抽出によって
-<img src="https://render.githubusercontent.com/render/math?math=
-I
-"> を推定します。
+<img src="https://render.githubusercontent.com/render/math?math=\bar{x}"> の標本抽出によって
+<img src="https://render.githubusercontent.com/render/math?math=I"> を推定します。
 
 母集団
-<img src="https://render.githubusercontent.com/render/math?math=
-M
-"> から経路の標本を引き、平均を評価します。より多くの標本を抽出することで標本が定義域を覆うことが期待できるので、近似の精度がよくなります。
+<img src="https://render.githubusercontent.com/render/math?math=M">
+から経路の標本を引き、平均を評価します。より多くの標本を抽出することで標本が定義域を覆うことが期待できるので、近似の精度がよくなります。
 
 |サンプルが小さいとき|サンプルが大きいとき|
 |:-:|:-:|
