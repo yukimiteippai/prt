@@ -49,7 +49,7 @@
 照明を計算する手法であるパストレーシングの説明をします。
 
 これは次に示すレンダリング方程式を解きます。
-現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、ある画素に対応する光の強さ
+現実のように光源からの光が散乱を繰り返し目に光が届くことを仮定すると、ある画素を通過する光の強さ
 <img src="https://render.githubusercontent.com/render/math?math=I"> は
 
 <img src="https://render.githubusercontent.com/render/math?math=I = \int_{M} f(\bar{x}) d\mu(\bar{x})"> です。
