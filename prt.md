@@ -117,14 +117,13 @@ color render(int x, int y) {
 
 #### シーンの設定
 
-まずグローバル変数としてカメラ、背景色、球体を用意します。
+まず、`void setup()` や `void draw()` などのブロックより外側に次のコードをコピペし、カメラ、背景色、球体のデータを用意します。
 ```java
 Camera camera;
 Material environment;
 Sphere sphere;
 ```
-`void setup()` や `void draw()` などのブロックより外側に上のコードをコピペします。
-ここに宣言した変数はグローバル変数(または大域変数)と呼ばれ、processing のすべての場所から使うことができます ( [スコープ](http://www.design.kyushu-u.ac.jp/~morimoto/teaching/materials/drawing0.html#2-%E3%82%B9%E3%82%B3%E3%83%BC%E3%83%97) )。
+このように、ブロックのもっとも外側にに宣言した変数はグローバル変数(または大域変数)と呼ばれ、processing のすべての場所から使うことができます ( [スコープ](http://www.design.kyushu-u.ac.jp/~morimoto/teaching/materials/drawing0.html#2-%E3%82%B9%E3%82%B3%E3%83%BC%E3%83%97) )。
 以降、ここにシーンの設定を保持し処理のために使います。
 
 次に `createScene` という関数を作り、その中でシーンのパラメータを設定します。
