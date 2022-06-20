@@ -21,6 +21,8 @@
     * [経路の生成と光の輸送](#経路の生成と光の輸送)
     * [光の累積](#光の累積)
     * [Ex.C&D](#Ex.C&D)
+        * [Ex.C](#Ex.C)
+        * [Ex.D](#Ex.D)
 * [参考](#参考)
 
 
@@ -490,9 +492,14 @@ color render(int x, int y) {
 
 `PVector trace(Ray ray, int n)` の空欄を埋め、反射方向を繰り返し追跡することにより陰影を計算してください。
 **反射の種類によって追跡する方向を決め、ray を更新する**部分のより詳しい説明を以下に書きます。
-この問題は、 `case DIFFUSE:` と `case SPECULAR:` のそれぞれで1点を与えます。
+この問題は、 `case DIFFUSE:` と `case SPECULAR:` のそれぞれが解けたら1点を与えます。
+片方を解かずに提出する場合には、 `ray.o =` を消す等して、エラーを出さず実行できる形で提出してください。
 
-### `case DIFFUSE:`
+
+<a id="Ex.C"></a>
+### Ex.C
+
+`trace` 関数の `case DIFFUSE:` 内を埋め、 `ray.o` と `ray.d` を更新してください。
 
 ![](images/diffuseRes.png)
 ![](images/diffuseTangent.jpg)
@@ -515,7 +522,10 @@ color render(int x, int y) {
 **d'** = (**TBn**)^(-1) **d**
 
 
-#### `case SPECULAR:`
+<a id="Ex.D"></a>
+### Ex.D
+
+`trace` 関数の `case SPECULAR:` 内を埋め、 `ray.o` と `ray.d` を更新してください。
 
 ![](images/specRes.png)
 ![](images/specRef.png)
