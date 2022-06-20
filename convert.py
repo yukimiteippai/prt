@@ -11,7 +11,8 @@ html = markdown.markdown(text,
 		'meta',
 		'toc',
 		'tables',
-		'fenced_code'
+		'fenced_code',
+		'pymdownx.b64'
 	],
 	extension_configs={
 		'toc':{
@@ -19,6 +20,7 @@ html = markdown.markdown(text,
 			'toc_depth': '2-4',
 		}
 	})
+
 
 out = file.replace('.md', '.html')
 with open(out, "w", encoding="utf-8", errors="xmlcharrefreplace") as output_file:
