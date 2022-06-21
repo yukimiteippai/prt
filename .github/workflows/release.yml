@@ -6,10 +6,10 @@ on:
       - '*'
 
 env:
-  md_source: 'prt.md'
+  md_source: 'docs/prt.md'
   html_output: 'Ray Tracing on Processing.html'
   pde_project: 'prt/*'
-  zip: prt.zip
+  zipped: prt.zip
 
 jobs:
   release:
@@ -23,8 +23,8 @@ jobs:
       - run: pip install Markdown pygments pymdown-extensions
 
 
-      - run: python3 convert.py ${{ env.md_source }} -o '${{ env.html_output }}'
-      - run: zip ${{ env.zip }} ${{ env.pde_project }} '${{ env.html_output }}'
+      - run: python3 docs/convert.py ${{ env.md_source }} -o '${{ env.html_output }}'
+      - run: zip ${{ env.zipped }} ${{ env.pde_project }} '${{ env.html_output }}'
 
 
       - name: Create release
@@ -45,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.ARTIFACT }}
-          asset_name: ${{ env.ARTIFACT }}
+          asset_path: ${{ env.zipped }}
+          asset_name: ${{ env.zipped }}
           asset_content_type: application/zip

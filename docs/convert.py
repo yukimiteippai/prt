@@ -1,8 +1,9 @@
 import markdown
-import sys
+import sys, os
 
 
 args = sys.argv
+dirname = os.path.dirname(__file__) + '/'
 
 source_file = args[1]
 
@@ -32,11 +33,14 @@ with open(source_file, "r", encoding="utf-8") as input_file:
 			'codehilite':{
 				'pygments_style': 'colorful',
 				'noclasses': True,
+			},
+			'pymdownx.b64':{
+				'base_path': dirname
 			}
 		})
 
 
-template_file = 'template.html'
+template_file = dirname + 'template.html'
 with open(template_file, 'r', encoding='utf-8') as template:
 	html = template.read().replace('{{content}}', html)
 

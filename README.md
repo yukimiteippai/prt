@@ -1,10 +1,15 @@
 # Ray Tracing on Processing
 
+> **Note**
+> This repository includes unrelated histories to merge updates for 2022's course from a different repository.
+
 ## component
 
 | file / directory | description |
 |:-|:-|
-| `images/` | images used in prt.md |
+| `.github/workflows/release.yml` | push any tag and generate html, zip and create release |
+| `build/` | script to convert md to html |
+| `docs/` | source text and images|
 | `prt/` | sample project to be distributed |
 | `prtex/prtex_a.pde` | Answer for practice Ex.A |
 | `prtex/prtex_b_l.pde` | Answer for practice Ex.B. left, `hit.material.Color()` |
@@ -13,8 +18,14 @@
 
 Each answer under `prtex/` is only the substitution for prt/prt.pde
 
+## build
 
-## note
+```sh
+python3 build/convert.py docs/prt.md -o output_name.html
+```
 
-* Markdown rendering is checked with [OmniMarkupPreviewer](https://theo.im/OmniMarkupPreviewer/).
-* This repository includes unrelated histories to merge updates for 2022's course from a different repository.
+You need some python packages that can be installed as following
+
+```sh
+pip install Markdown pygments pymdown-extensions
+```
