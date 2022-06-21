@@ -85,7 +85,7 @@ color render(int x, int y) {
 ```
 この関数は、座標 (x, y) の色を作って返す関数です。
 あとでの計算のしやすさのために、内部では色を `PVector` で表現することとします。
-最後に `toColor` 関数で `color` 型に変換して返します。
+`PVector` の要素である x 成分が 色の R 成分、 y 成分が 色の G 成分、 z 成分が 色の B 成分と考え、最後に `toColor` 関数で正規化された `color` 型として返します。
 サンプルではRの値が x/width, Gの値が y/height, そしてBは 0 です。 つまり画像の右へいくほど赤、下へ行くほど緑であるプログラムになっています。
 このサンプルを書き換えていき、レイトレーシングやパストレーシングを実装していきます。
 
@@ -264,7 +264,7 @@ void createScene() {
   Material white  = new Material(null, new PVector(0.6, 0.6, 0.6), MtlType.DIFFUSE);
   Material red    = new Material(null, new PVector(0.8, 0.2, 0.2), MtlType.DIFFUSE);
   Material green  = new Material(null, new PVector(0.2, 0.8, 0.2), MtlType.DIFFUSE);
-  Material mirror = new Material(null, new PVector(0.9, 0.6, 0.1), MtlType.SPECULAR;
+  Material mirror = new Material(null, new PVector(0.9, 0.6, 0.1), MtlType.SPECULAR);
   Material light  = new Material(new PVector(10,10,10), null);
 
   // 球を配置する
