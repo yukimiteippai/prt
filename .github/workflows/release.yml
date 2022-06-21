@@ -1,0 +1,50 @@
+name: release with zip
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  md_source: 'prt.md'
+  html_output: 'Ray Tracing on Processing.html'
+  pde_project: 'prt/*'
+  zip: prt.zip
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install Markdown pygments pymdown-extensions
+
+
+      - run: python3 convert.py ${{ env.md_source }} -o '${{ env.html_output }}'
+      - run: zip ${{ env.zip }} ${{ env.pde_project }} '${{ env.html_output }}'
+
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT }}
+          asset_name: ${{ env.ARTIFACT }}
+          asset_content_type: application/zip
