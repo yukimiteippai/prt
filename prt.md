@@ -486,21 +486,20 @@ color render(int x, int y) {
 ![](images/diffuseTangent.jpg)
 
 材質が光を拡散反射する場合です。
-`sampleHemisphere_cosine(random(1), random(1))` は接面空間 (**TBn**)上での拡散反射の方向を求めます。
-ここで接面空間とは、hitした面上の点における法線 **n** と、それに垂直な面上から適当に選んだ正規直交な基 **T, B** からなる空間です。
-ここでは反射の方向のみに興味があり、それは空間の原点に関係ないので、接面空間は線形変換です(アフィン変換を導入する必要がありません)。
+`sampleHemisphere_cosine(random(1), random(1))` は接面空間 $(\boldsymbol{T}\boldsymbol{B}\boldsymbol{n})$ 上での拡散反射の方向を求めます。
+ここで接面空間とは、hitした面上の点における法線 $\boldsymbol{n}$ と、それに垂直な面上から適当に選んだ正規直交な基 $\boldsymbol{T}, \boldsymbol{B}$ からなる空間です。
+ここでは反射の方向のみに興味があり、それは空間の原点に関係ないので、接面空間は3次元空間の線形変換です。
 詳しくは [シェーディングのための正規直交基底](https://rayspace.xyz/CG/contents/orthonormal_basis/) の接平面ベクトルの参照してください。
 
 この空間上で選ばれた方向 `dir` を、シーン全体を定義した空間（x, y, z 座標系）上での方向になおし、光線の追跡を続けてください。
 プログラム上で接面空間の基は `T:PVector, B:PVector, Hit.normal` として用意されています。
 
 #### PVector のみを用いる場合
-接面空間上で選んだ方向を **d** = (d1; d2; d3) とすると、シーンの空間における方向は **d'** = (d1 * **T**) + (d2 * **B**) + (d3 * **n**) です。
+接面空間上で選んだ方向を $\boldsymbol{d} = (d_0; d_1; d_2)$ とすると、シーンの空間における方向は $\boldsymbol{d'} = d_0 \boldsymbol{T} + d_1 \boldsymbol{B} + d_2 \boldsymbol{n} $ です。
 
 #### PMatrix とPVector を用いる場合
 [PMatrix](https://processing.github.io/processing-javadocs/core/processing/core/PMatrix.html)を使う場合です。
-もとの空間から接面空間への変換が (**TBn**) なので、この逆変換を選んだ方向（**d** とする）にかけることで求める方向 **d'** が得られます。<br>
-**d'** = (**TBn**)^(-1) **d**
+もとの空間から接面空間への変換が $(\boldsymbol{TBn})$ なので、この逆変換を選んだ方向 $\boldsymbol{d}$ にかけることで求める方向 $\boldsymbol{d'}$ が得られます。　式は $d' = (TBn)^{-1} d$ です。
 
 
 <a id="Ex.D"></a>
@@ -513,8 +512,8 @@ color render(int x, int y) {
 
 材質が光線を完全鏡面反射する場合です。
 探索を続ける方向すなわち鏡面反射の入射方向を求めてください。
-現在の探索方向(視線) **d** 、次に探索する方向(入射方向) **d'** 、法線 **n** は図より **d'** = **d** - 2(**d・n**)**n**  という関係を持ちます ([反射ベクトルを求める](https://qiita.com/edo_m18/items/b145f2f5d2d05f0f29c9))。
-`a:PVector` と `b:PVector` の内積は `PVector.dot(a,b):float` で計算できます。
+現在の探索方向(視線) $\boldsymbol{d}$ 、次に探索する方向(入射方向) $\boldsymbol{d'}$ 、法線 $\boldsymbol{n}$ は図より $\boldsymbol{d'} = \boldsymbol{d} - 2(\boldsymbol{d}\cdot\boldsymbol{n})\boldsymbol{n}$ という関係を持ちます ([反射ベクトルを求める](https://qiita.com/edo_m18/items/b145f2f5d2d05f0f29c9))。
+`a:PVector` と `b:PVector` の内積 $(\boldsymbol{a}\cdot\boldsymbol{b})$ は `PVector.dot(a,b):float` で計算できます。
 
 
 <a id="参考"></a>
