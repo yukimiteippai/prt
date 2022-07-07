@@ -24,8 +24,5 @@ Each answer under `prtex/` is only the substitution for prt/prt.pde
 python3 build/convert.py docs/prt.md -o output_name.html
 ```
 
-You need some python packages that can be installed as following
+You need some python packages written in `requirement.txt`
 
-```sh
-pip install Markdown pygments pymdown-extensions
-```
