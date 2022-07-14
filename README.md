@@ -18,7 +18,7 @@
 
 Each answer under `prtex/` is only the substitution for prt/prt.pde
 
-## build
+## build locally
 
 ```sh
 python3 build/convert.py docs/prt.md -o output_name.html
@@ -26,3 +26,7 @@ python3 build/convert.py docs/prt.md -o output_name.html
 
 You need some python packages written in `requirement.txt`
 
+## automated build and release
+
+Push any tag to build, zip, and release on GitHub Actions.
+The released file is named 'prt.zip' and contains 'Ray Tracing on Processing.html' the text and `prt/*` the sample Processing project.
