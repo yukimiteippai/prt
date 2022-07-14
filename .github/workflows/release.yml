@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - run: pip install Markdown pygments pymdown-extensions
+      - run: pip install -r requirements.txt
 
 
       - run: python3 docs/convert.py ${{ env.md_source }} -o '${{ env.html_output }}'
